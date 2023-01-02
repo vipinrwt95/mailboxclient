@@ -1,8 +1,9 @@
 import { Container } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import NavLink from 'react-bootstrap/NavLink';
+import { NavLink } from "react-router-dom";
 import { useRef } from 'react';
+
 
 function FormPage() {
    const enteredEmail=useRef();
@@ -50,7 +51,7 @@ function FormPage() {
 }
   return (
     <Container>
-      <h1>SIGN UP</h1>
+      <h1 align="center">SIGN UP</h1>
     <Form onSubmit={formsignupHandler}>
       <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Label>Email address</Form.Label>
@@ -68,7 +69,8 @@ function FormPage() {
         <Form.Label>Confirm Password</Form.Label>
         <Form.Control type="password" placeholder="Password Again" ref={confirmpassword} />
       </Form.Group>
-      <NavLink>Already have an account , Sign In </NavLink>
+      <NavLink to="/login">Already have an account , Sign In </NavLink>
+      
       <div><Button variant="primary" type="submit">
         SIGN UP
       </Button>
