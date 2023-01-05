@@ -5,6 +5,7 @@ import FormPage from './components/FormPage';
 import Login from './components/Login';
 import {Route,Routes} from 'react-router-dom';
 import Profile from './Pages/Profile';
+import MailCompose from './components/MailCompose';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
     </Route>
     <Route path='/profile' element={<Profile />}>
     </Route>
+    <Route path='/mail' element={<MailCompose />}></Route>
   </Routes>
     </>
   );

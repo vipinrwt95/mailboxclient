@@ -37,7 +37,7 @@ const Login=()=> {
         {
           return res.json().then(data=>{
             console.log(data);
-            dispatch(authActions.login(data.idToken))
+            dispatch(authActions.login(data))
             history('/profile')
             
           })
