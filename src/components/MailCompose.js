@@ -10,6 +10,7 @@ import { EditorState , convertToRaw } from "draft-js";
 import { useState } from "react";
 import { Container } from "react-bootstrap";
 import draftToHtml from 'draft-js';
+import { matchRoutes } from "react-router";
 const FIREBASE_DOMAIN="https://mailbox-client-f3112-default-rtdb.firebaseio.com/";
 const MailCompose=()=>{
     const emailid=useSelector(state=>state.auth.email);
@@ -28,7 +29,10 @@ const message=convertToRaw(editorState.getCurrentContent()).blocks;
             Subject:Subject,
             message:message
         }
-        const response = await fetch(`${FIREBASE_DOMAIN}/mails.json`, {
+      const emaill=email.replace('@','')
+      const emailadd=emaill.replace('.','')
+      
+    const response = await fetch(`${FIREBASE_DOMAIN}/${emailadd}/inbox.json`, {
               method: 'POST',
               body: JSON.stringify(maildetails),
               headers: {
@@ -42,7 +46,23 @@ const message=convertToRaw(editorState.getCurrentContent()).blocks;
             }
              else{
                    console.log('Email Sent');
-              }
+                   const emailsend=emailid.replace('@','');
+                   const emailsentby=emailsend.replace('.','')
+                   const response = await fetch(`${FIREBASE_DOMAIN}/${emailsentby}/sent.json`, {
+                    method: 'POST',
+                    body: JSON.stringify(maildetails),
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                  });
+                  const data = await response.json();
+                
+                  if(response.ok)
+                  {
+                    alert('Email Sent');
+                  }  
+                    }
+              
         }
 
 

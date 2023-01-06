@@ -6,6 +6,7 @@ import Login from './components/Login';
 import {Route,Routes} from 'react-router-dom';
 import Profile from './Pages/Profile';
 import MailCompose from './components/MailCompose';
+import Inbox from './Pages/Inbox';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
     <Route path='/profile' element={<Profile />}>
     </Route>
     <Route path='/mail' element={<MailCompose />}></Route>
+    <Route path='/inbox' element={<Inbox />}></Route>
   </Routes>
     </>
   );
