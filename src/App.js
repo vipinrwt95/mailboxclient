@@ -8,6 +8,7 @@ import Profile from './Pages/Profile';
 import MailCompose from './components/MailCompose';
 import Inbox from './Pages/Inbox';
 import Maildetails from './Pages/Maildetails';
+import Sent from './Pages/Sent';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
     </Route>
     <Route path='/mail' element={<MailCompose />}></Route>
     <Route path='/inbox' element={<Inbox />}></Route>
+    <Route path='/sent' element={<Sent />}></Route>
     <Route path='/maildetails' element={<Maildetails />}></Route>
   </Routes>
     </>

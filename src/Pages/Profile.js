@@ -13,7 +13,8 @@ const Profile=()=>{
     return (
         <>
         <h1>Welcome to your Mail-Box</h1>
-        <NavLink to='/inbox'>Inbox</NavLink>
+        <div><NavLink to='/inbox'>Inbox</NavLink></div>
+        <div><NavLink to='/sent'>Sent</NavLink></div>
          </>
        )
 }

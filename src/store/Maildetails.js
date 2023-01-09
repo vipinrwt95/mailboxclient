@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialAuthState={recievedmails:[],sentemails:[],currentmail:[],mailread:false,recievedkeys:[],allobjects:[],currentkey:null}
+const initialAuthState={recievedmails:[],sentemails:[],sentobjects:[],sentkeys:[],currentmail:[],mailread:false,recievedkeys:[],allobjects:[],currentkey:null}
 const mailSlice=createSlice(
     {
        name:'mails',
@@ -15,7 +15,9 @@ const mailSlice=createSlice(
           },
           sent(state,action)
           {
-            state.sentemails=action.payload
+            state.sentobjects=action.payload;
+            state.sentemails=Object.values(action.payload);
+            state.sentkeys=Object.keys(action.payload);
           },
           currentmail(state,action)
           {
