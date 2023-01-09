@@ -8,9 +8,10 @@ const mailSlice=createSlice(
        reducers:{
           recieved(state,action)
           {
+           state.allobjects=action.payload;
            state.recievedmails=Object.values(action.payload);
            state.recievedkeys=Object.keys(action.payload);
-           state.allobjects=action.payload;
+           
           },
           sent(state,action)
           {
@@ -27,6 +28,12 @@ const mailSlice=createSlice(
           currentkey(state,action)
           { 
             state.currentkey=action.payload;
+          },
+          removemail(state,action)
+          {
+            
+            state.allobjects=action.payload;
+         
           }
        }
     }
