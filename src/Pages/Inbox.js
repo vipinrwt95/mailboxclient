@@ -5,6 +5,7 @@ import { mailActions } from "../store";
 import { Button, Container } from "react-bootstrap";
 import {Link} from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
+import { useCallback } from "react";
 
 const FIREBASE_DOMAIN="https://mailbox-client-f3112-default-rtdb.firebaseio.com/";
 const Inbox=()=>{
@@ -39,10 +40,15 @@ const fetchmails=async()=>{
     
      
 }
-useEffect(()=>{
- fetchmails();
- 
-},[])
+useEffect(() => {
+	let interval = setInterval(() => {
+        fetchmails();
+	}, 2000);
+    
+return () => {
+		clearInterval(interval);
+	};
+}, []);
 
 
 const openMailHandler=(item)=>{
