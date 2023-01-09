@@ -18,6 +18,10 @@ const MailCompose=()=>{
     const Subjectentered=useRef();
     const[editorState,setEditorState]=useState(()=>EditorState.createEmpty())
 const message=convertToRaw(editorState.getCurrentContent()).blocks;
+let mailtext='';
+message.map(item=>mailtext=mailtext+item.text+' ')
+
+
     async function SendMailHandler(event){ 
         event.preventDefault();
         const email=emailentered.current.value;
@@ -27,7 +31,8 @@ const message=convertToRaw(editorState.getCurrentContent()).blocks;
             senderemail:emailid, 
             recieveremail:email,
             Subject:Subject,
-            message:message
+            message:mailtext,
+            read:false
         }
       const emaill=email.replace('@','')
       const emailadd=emaill.replace('.','')
