@@ -5,6 +5,8 @@ import { mailActions } from "../store";
 import { Button, Container } from "react-bootstrap";
 import {Link} from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
+import { useCallback } from "react";
+import useHttp from "../hooks/use-http";
 
 const FIREBASE_DOMAIN="https://mailbox-client-f3112-default-rtdb.firebaseio.com/";
 const Sent=()=>{
@@ -15,23 +17,21 @@ const Sent=()=>{
     const allobjects=useSelector(state=>state.mails.sentobjects)
     const currentKey=useSelector(state=>state.mails.currentkey)
 
-const fetchmails=async()=>{
+    const retrieve=useCallback((data)=>{dispatch(mailActions.sent(data))})
     const emailadd=email.replace('@','');
-    const myemail=emailadd.replace('.','')
-    const response = await fetch(`${FIREBASE_DOMAIN}/${myemail}/sent.json`)
-    const data=await response.json();
-   if(response.ok)
-   { 
-    dispatch(mailActions.sent(data));
-   }
-   
-    
-     
-}
-useEffect(()=>{
- fetchmails();
+   const myemail=emailadd.replace('.','')
+  const {sendRequest:fetchmails}= useHttp(retrieve);
+  
  
-},[])
+useEffect(() => {
+   let interval = setInterval(() => {
+       fetchmails({url:`${FIREBASE_DOMAIN}/${myemail}/sent.json`});
+   }, 1000);
+   
+return () => {
+       clearInterval(interval);
+   };
+}, [fetchmails]);
 
 
 const openMailHandler=(item)=>{

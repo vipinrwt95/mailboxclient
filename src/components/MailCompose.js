@@ -7,10 +7,11 @@ import { useSelector } from "react-redux";
 import { Editor } from 'react-draft-wysiwyg';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState , convertToRaw } from "draft-js";
-import { useState } from "react";
+import { useState ,useCallback } from "react";
 import { Container } from "react-bootstrap";
 import draftToHtml from 'draft-js';
 import { matchRoutes } from "react-router";
+import useHttp from "../hooks/use-http";
 const FIREBASE_DOMAIN="https://mailbox-client-f3112-default-rtdb.firebaseio.com/";
 const MailCompose=()=>{
     const emailid=useSelector(state=>state.auth.email);
@@ -20,10 +21,15 @@ const MailCompose=()=>{
 const message=convertToRaw(editorState.getCurrentContent()).blocks;
 let mailtext='';
 message.map(item=>mailtext=mailtext+item.text+' ')
+const userSentHandler=useCallback((data)=>{if(data)
+  { 
+   console.log('email sent');
+  }}) 
+const {sendRequest:sendmail}=useHttp(userSentHandler);
+async function SendMailHandler(event){ 
 
-
-    async function SendMailHandler(event){ 
         event.preventDefault();
+        
         const email=emailentered.current.value;
         const Subject=Subjectentered.current.value;
         
@@ -34,43 +40,23 @@ message.map(item=>mailtext=mailtext+item.text+' ')
             message:mailtext,
             read:false
         }
+        
+          
       const emaill=email.replace('@','')
       const emailadd=emaill.replace('.','')
-      
-    const response = await fetch(`${FIREBASE_DOMAIN}/${emailadd}/inbox.json`, {
-              method: 'POST',
-              body: JSON.stringify(maildetails),
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            });
-            const data = await response.json();
-          
-            if (!response.ok) {
-              alert('Could not send mail')
-            }
-             else{
-                   console.log('Email Sent');
-                   const emailsend=emailid.replace('@','');
-                   const emailsentby=emailsend.replace('.','')
-                   const response = await fetch(`${FIREBASE_DOMAIN}/${emailsentby}/sent.json`, {
-                    method: 'POST',
-                    body: JSON.stringify(maildetails),
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                  });
-                  const data = await response.json();
-                
-                  if(response.ok)
-                  {
-                    alert('Email Sent');
-                  }  
-                    }
-              
-        }
+      const sentemail=emailid.replace('@','')
+      const sentemailid=sentemail.replace('.','')
 
-
+    sendmail({url:`${FIREBASE_DOMAIN}/${emailadd}/inbox.json`,method:'POST',headers:{
+        'Content-Type': 'application/json',
+      },
+    body:maildetails})
+    sendmail({url:`${FIREBASE_DOMAIN}/${sentemailid}/sent.json`,method:'POST',headers:{
+      'Content-Type': 'application/json',
+    },
+  body:maildetails})
+}
+             
 return (
     <>
     <h1 align="center">COMPOSE MAIL</h1>

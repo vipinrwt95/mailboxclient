@@ -3,12 +3,18 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { NavLink } from "react-router-dom";
 import { useRef } from 'react';
+import useHttp from '../hooks/use-http';
 
 
-function FormPage() {
+ function FormPage() {
    const enteredEmail=useRef();
    const enteredPassword=useRef();
    const confirmpassword=useRef();
+   const retrieveauth=(data)=>{
+      console.log(data)
+   }
+   const {sendRequest:signUp}= useHttp(retrieveauth);
+   
 
   const formsignupHandler=(event)=>{
     event.preventDefault();
@@ -19,37 +25,20 @@ function FormPage() {
 
     if(Password===conpassword)
     {
-      fetch("https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAaRJjUMUJibbnGiiTbHYvoqeQX2Xrl2Ck",
-    {
-      method:'POST',
-      body:JSON.stringify({
+      signUp({url:"https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAaRJjUMUJibbnGiiTbHYvoqeQX2Xrl2Ck",method:'POST',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:{
         email:Email,
         password:Password,
         returnSecureToken:true
-      }),
-      headers:{
-        'Content-Type':'application/json'
-      }
-
-    }).then(res=>{
-      
-      if(res.ok)
-      {
-        console.log("User has successfully signed up"); 
-      }
-      else{
-        return res.json().then(data=>{
-         alert(data.error.message)
-        });
       }
     })}
-    else 
-    { 
-      alert('Passwords do not match , Try again')
-    }
-
-}
-  return (
+  }
+    
+      
+return (
     <Container>
       <h1 align="center">SIGN UP</h1>
     <Form onSubmit={formsignupHandler}>
@@ -81,4 +70,5 @@ function FormPage() {
   );
 }
 
-export default FormPage
+ 
+export default FormPage;

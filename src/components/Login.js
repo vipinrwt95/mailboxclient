@@ -6,6 +6,7 @@ import { useRef } from 'react';
 import {useNavigate} from 'react-router-dom';
 import { authActions } from '../store';
 import {useDispatch } from 'react-redux';
+import useHttp from '../hooks/use-http';
 
 
 const Login=()=> {
@@ -13,44 +14,32 @@ const Login=()=> {
     const history=useNavigate();
    const enteredEmail=useRef();
    const enteredPassword=useRef();
-   
-
+   const retrieveauth=(data)=>{
+       if(typeof data=='string')
+       {
+        alert (data)
+       }
+       else{
+        dispatch(authActions.login(data))
+        history('/profile')
+       }  
+      }
+   const {sendRequest:login}= useHttp(retrieveauth);
   const formsignupHandler=(event)=>{
     event.preventDefault();
     
     const Password=enteredPassword.current.value;
     const Email=enteredEmail.current.value;
-    fetch("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAaRJjUMUJibbnGiiTbHYvoqeQX2Xrl2Ck",
-      {
-        method:'POST',
-        body:JSON.stringify({
-          email:Email,
-          password:Password,
-          returnSecureToken:true
-        }),
-        headers:{
-          'Content-Type':'application/json'
-        }
 
-      }).then(res=>{
-        if(res.ok)
-        {
-          return res.json().then(data=>{
-            console.log(data);
-            dispatch(authActions.login(data))
-            history('/profile')
-            
-          })
-        }
-        else{
-          return res.json().then(data=>{
-           alert(data.error.message)
-          });
-        }
-      })
-
-
-}
+    login({url:"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAaRJjUMUJibbnGiiTbHYvoqeQX2Xrl2Ck",method:'POST',
+  body:{email:Email,
+    password:Password,
+    returnSecureToken:true},
+    headers:{
+      'Content-Type':'application/json'
+    }
+  })
+  }
   return (
     <Container>
       <h1 align="center">LOG IN </h1>
