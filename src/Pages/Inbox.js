@@ -6,6 +6,7 @@ import { Button, Container } from "react-bootstrap";
 import {Link} from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import { useCallback } from "react";
+import useHttp from "../hooks/use-http";
 
 const FIREBASE_DOMAIN="https://mailbox-client-f3112-default-rtdb.firebaseio.com/";
 const Inbox=()=>{
@@ -26,40 +27,36 @@ if(mails)
       }
     }
 }
-
-const fetchmails=async()=>{
+const retrieve=useCallback((data)=>{
+  
+  dispatch(mailActions.recieved(data)) })
+     console.log(mails);
     const emailadd=email.replace('@','');
     const myemail=emailadd.replace('.','')
-    const response = await fetch(`${FIREBASE_DOMAIN}/${myemail}/inbox.json`)
-    const data=await response.json();
-   if(response.ok)
-   { 
-    dispatch(mailActions.recieved(data)) 
-   }
    
-    
-     
-}
+  const {sendRequest:fetchmails}= useHttp(retrieve);
+   
+  
 useEffect(() => {
 	let interval = setInterval(() => {
-        fetchmails();
-	}, 2000);
+        fetchmails({url:`${FIREBASE_DOMAIN}/${myemail}/inbox.json`});
+	}, 1000);
     
 return () => {
 		clearInterval(interval);
 	};
-}, []);
+}, [fetchmails]);
 
 
 const openMailHandler=(item)=>{
      
     dispatch(mailActions.currentmail(item))
       
-     const key = Object.keys(allobjects).find(key => allobjects[key] ===item);
+     const key = Object.keys(allobjects).find(key => allobjects[key]===item);
      
      dispatch(mailActions.currentkey(key))
      if(currentKey)
-     {  
+     {  console.log(currentKey);
         Navigate("/maildetails")
      }
     }
@@ -100,7 +97,7 @@ const MailDeleteHandler=async(item)=>{
     {
      !mails && <p>No mail recieved</p>   
     }
-    <Button className="btn btn-warning" ><Link to='/mail'>COMPOSE MAIL</Link></Button>
+    
     </>
  )
 
